@@ -231,7 +231,7 @@ not shrink (incompressible), the PS stores it raw with a "stored" flag.
   ┌────────────────┐  fopen   ┌────────────────────────────┐ /dev/mem ┌──────────────────────────┐
   │ original_file   │─fread──► │ lzo_app                     │  mmap    │ lzo_top (AXI4-Lite slave) │
   │ compressed_file │◄fwrite─ │  • split into 4 KB blocks   │ AXI-Lite │   ┌─ bufA  (input block)  │
-  │ uncompressed..  │◄fwrite─ │  • per block: write→start   │◄───────► │   ├─ bufB  (output block) │
+  │ decompressed..  │◄fwrite─ │  • per block: write→start   │◄───────► │   ├─ bufB  (output block) │
   └────────────────┘          │    →poll BUSY→read          │          │   ├─ hash BRAM            │
         UART ◄── printf        │  • write container/files    │          │   ├─ lzo_comp             │
         (sizes, ratio, PASS)   └────────────────────────────┘          │   └─ lzo_decomp           │
@@ -556,5 +556,5 @@ by the PS.
    tb_top : full compress+decompress over AXI-Lite, two passes (same engine)
    golden : Python reference self round-trips and also decodes RTL output
    host   : lzo_app.c + lzo_sw.c (HOST_MOCK) — container/flow on a PC
-   board  : 20000 → 7776 (2.59×), uncompressed == original, report on UART
+   board  : 20000 → 7776 (2.59×), decompressed == original, report on UART
 ```
