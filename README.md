@@ -7,7 +7,7 @@ does the USB file I/O, drives the FPGA over `/dev/mem`, and prints the report on
 the UART console.
 
 **Verified on real hardware:** `original_file.txt` 20000 B → `compressed_file.txt`
-**7776 B** (2.59×, 61 % saved) → `uncompressed_file.txt` 20000 B, byte-identical
+**7776 B** (2.59×, 61 % saved) → `decompressed_file.txt` 20000 B, byte-identical
 to the original.
 
 ## Flow
@@ -15,8 +15,8 @@ to the original.
 2. CPU streams it in 4 KB blocks to the FPGA, which **compresses** in fabric; CPU
    writes `compressed_file.txt` to the USB drive.
 3. CPU reads `compressed_file.txt` back and streams it to the FPGA, which
-   **decompresses** in fabric; CPU writes `uncompressed_file.txt`.
-4. CPU verifies `original == uncompressed` and prints sizes + ratio on the UART.
+   **decompresses** in fabric; CPU writes `decompressed_file.txt`.
+4. CPU verifies `original == decompressed` and prints sizes + ratio on the UART.
 
 ## Repo layout
 ```
@@ -40,7 +40,7 @@ tb/    testbenches + vectors + reference model
 usb/
 original_file.txt
 compressed_file.txt
-uncompressed_file.txt
+decompressed_file.txt
 ```
 
 ## Token format (LZO1X-style, self-consistent)
